@@ -63,6 +63,11 @@ public class ProjectServiceImpl implements ProjectService {
         return null;
     }
 
+    public Boolean delete(Long id){
+        projectRepository.deleteById(id);
+        return true;
+    }
+
     @Override
     public ProjectDto update(Long id, ProjectDto project) {
         Project projectDb = projectRepository.getOne(id);
@@ -70,11 +75,9 @@ public class ProjectServiceImpl implements ProjectService {
             throw  new IllegalArgumentException("Project does not exist ID:" + id);
         }
 
-        Project projectCheck = projectRepository.getByProjectCode(project.getProjectCode());
-
-        if(projectCheck!=null && projectCheck.getId() != projectDb.getId() ){
-            throw  new IllegalArgumentException("Project code already exist");
-        }
+        Project projectCheck = projectRepository.getByProjectCodeAndIdNot(project.getProjectCode(), id);
+        if (projectCheck != null)
+            throw new IllegalArgumentException("Project Code Already Exist");
 
         projectDb.setProjectCode(project.getProjectCode());
         projectDb.setProjectName(project.getProjectName());

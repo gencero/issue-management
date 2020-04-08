@@ -19,11 +19,11 @@ public class IssueServiceImpl implements IssueService {
     @Autowired
     private final IssueRepository issueRepository;
     private final ModelMapper modelMapper;
+
     public IssueServiceImpl(IssueRepository issueRepository, ModelMapper modelMapper){
         this.issueRepository = issueRepository;
         this.modelMapper = modelMapper;
     }
-
 
     @Override
     public IssueDto save(IssueDto issue) {
@@ -38,7 +38,8 @@ public class IssueServiceImpl implements IssueService {
 
     @Override
     public IssueDto getById(Long id) {
-        return null;
+        Issue issue = issueRepository.getOne(id);
+        return modelMapper.map(issue, IssueDto.class);
     }
 
     @Override
@@ -51,7 +52,13 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public Boolean delete(IssueDto issue) {
+    public Boolean delete(Long issueId) {
+        issueRepository.deleteById(issueId);
+        return true;
+    }
+
+    @Override
+    public IssueDto update(Long id, IssueDto issue) {
         return null;
     }
 }
