@@ -1,40 +1,53 @@
 package com.orhang.issuemanagement.service.impl;
 
+import com.orhang.issuemanagement.dto.IssueDto;
+import com.orhang.issuemanagement.dto.IssueHistoryDto;
+import com.orhang.issuemanagement.entity.Issue;
 import com.orhang.issuemanagement.entity.IssueHistory;
 import com.orhang.issuemanagement.repository.IssueHistoryRepository;
+import com.orhang.issuemanagement.repository.IssueRepository;
 import com.orhang.issuemanagement.service.IssueHistoryService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class IssueHistoryServiceImpl implements IssueHistoryService {
-    private final IssueHistoryRepository issueHistoryRepository;
 
-    public IssueHistoryServiceImpl(IssueHistoryRepository issueHistoryRepository){
+    @Autowired
+    private final IssueHistoryRepository issueHistoryRepository;
+    private final ModelMapper modelMapper;
+
+    public IssueHistoryServiceImpl(IssueHistoryRepository issueHistoryRepository, ModelMapper modelMapper){
         this.issueHistoryRepository = issueHistoryRepository;
+        this.modelMapper = modelMapper;
     }
     @Override
-    public IssueHistory save(IssueHistory issueHistory) {
-        if (issueHistory.getDate() == null){
-            throw  new IllegalArgumentException("issue can not be null");
+    public IssueHistoryDto save(IssueHistoryDto issueHistory) {
+
+        if(issueHistory.getDate()==null){
+            throw new IllegalArgumentException("issue can not be null");
         }
 
-        return issueHistoryRepository.save(issueHistory);
+        IssueHistory issueHistoryDb = modelMapper.map(issueHistory, IssueHistory.class);
+        issueHistoryDb = issueHistoryRepository.save(issueHistoryDb);
+        return modelMapper.map(issueHistoryDb, IssueHistoryDto.class);
     }
 
     @Override
-    public IssueHistory getById(Long id) {
+    public IssueHistoryDto getById(Long id) {
         return null;
     }
 
     @Override
-    public Page<IssueHistory> getAllPageable(Pageable pageable) {
+    public Page<IssueHistoryDto> getAllPageable(Pageable pageable) {
         return null;
     }
 
     @Override
-    public Boolean delete(IssueHistory issueHistory) {
+    public Boolean delete(IssueHistoryDto issueHistory) {
         return null;
     }
 }
