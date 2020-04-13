@@ -47,7 +47,7 @@ public class IssueServiceImpl implements IssueService {
         Page<Issue> data = issueRepository.findAll(pageable);
         TPage page = new TPage<IssueDto>();
         IssueDto[] dtos = modelMapper.map(data.getContent(), IssueDto[].class);
-        page.setStats(data, Arrays.asList(dtos));
+        page.setStat(data, Arrays.asList(dtos));
         return page;
     }
 
